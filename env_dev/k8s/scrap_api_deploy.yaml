@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrap-api
+  namespace: carbon-re
+  labels:
+    app: scrap-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: scrap-api
+  template:
+    metadata:
+      labels:
+        app: scrap-api
+    spec:
+      serviceAccountName: gcr-sa # 테라폼에서 생성한 서비스 계정 이름 사용
+      imagePullSecrets:
+      - name: asia-northeast3-gcr-secret
+      containers:
+      - name: scrap-api
+        image: asia-northeast3-docker.pkg.dev/carbonsaurus-dev/carbon-re-dev-scrap-api/carbon-scrap-api:519c3167d2df5d98ecc426c03fb48cdd1b662c2a
+        ports:
+        - containerPort: 8000
+        envFrom:
+        - secretRef:
+            name: scrap-api
+      - name: cloud-sql-proxy
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.14.1
+        args:
+        - "--port=5432"
+        - "--private-ip"
+        - "--credentials-file=/secrets/cloudsql/credentials.json"
+        - "carbonsaurus-dev:asia-northeast3:carbon-re-dev-db"
+        securityContext:
+         runAsNonRoot: true
+        volumeMounts:
+        - name: cloud-sql-proxy-credentials
+          mountPath: /secrets/cloudsql
+          readOnly: true
+      - name: carbontrack-rabbitmq
+        image: neogicarbonsaurus/customization:3.13-mgt-stream
+      volumes:
+      - name: cloud-sql-proxy-credentials
+        secret:
+          secretName: cloud-sql-proxy-credentials

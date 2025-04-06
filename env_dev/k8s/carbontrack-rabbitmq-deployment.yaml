@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carbontrack-rabbitmq-deployment
+  namespace: carbon-re
+  labels:
+    app: carbontrack-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: carbontrack-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: carbontrack-rabbitmq
+    spec:
+      containers:
+      - name: carbontrack-rabbitmq
+        # 사용할 커스텀 이미지로 변경
+        image: neogicarbonsaurus/customization:3.13-mgt-stream
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: http-mgmt

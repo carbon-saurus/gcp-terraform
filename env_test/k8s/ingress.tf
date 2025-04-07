@@ -46,12 +46,7 @@ resource "kubernetes_manifest" "carbon_re_gke_cert" {
     }
     "spec" = {
       "domains" = [
-        var.domain_name,
-        "scrap-api.${var.domain_name}",
-        "track-api.${var.domain_name}",
-        "account-api.${var.domain_name}",
-        "new-dev.${var.domain_name}",
-        "new-dev-admin.${var.domain_name}",
+        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}"
       ]
     }
   }
@@ -96,27 +91,23 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     namespace = var.project
     annotations = {
       "kubernetes.io/ingress.class"                     = "gce"
+      "kubernetes.io/ingress.allow-http"                = "true"  # HTTP 트래픽 허용 여부 (true/false)
       "networking.gke.io/managed-certificates"          = "carbon-re-gke-cert"
+      # "networking.gke.io/v1beta1.FrontendConfig"        = "carbon-re-fe-config"
       "kubernetes.io/ingress.global-static-ip-name"     = data.google_compute_global_address.ingress_static_ip.name
       "ingress.kubernetes.io/force-ssl-redirect"        = "true" # HTTP -> HTTPS 리디렉션
+      # "beta.cloud.google.com/backend-config"            = "{\"/api/*\": \"carbon-re-be-config\"}"
+      # "cloud.google.com/backend-config"                 = "{\"/api/*\": \"carbon-re-be-config\"}"
+      # "kubernetes.io/ingress.allow-google-ip"          = "true"
     }
   }
   spec {
-    # ingress_class_name = "gce"
-    # default_backend {
-    #   service {
-    #     name = "carbon-re-service"
-    #     port {
-    #       number = 80
-    #     }
-    #   }
-    # }
     rule {
-      host = var.domain_name
+      host = "${var.env}.${trimsuffix(var.dns_domain_name, ".")}"
       http {
         path {
-          path      = "/*"
-          path_type = "ImplementationSpecific"
+          path      = "/"
+          path_type = "Prefix"
           backend {
             service {
               name = "carbon-re-service"
@@ -126,13 +117,33 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
             }
           }
         }
-      }
-    }
-    rule {
-      host = "scrap-api.carbonsaurus.net"
-      http {
         path {
-          path = "/*"
+          path      = "/track/*"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "track-api-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+        path {
+          path      = "/account/*"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "account-api-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+        path {
+          path      = "/scrap/*"
+          path_type = "Prefix"
           backend {
             service {
               name = "scrap-api-service"
@@ -196,7 +207,6 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
   depends_on = [
     kubernetes_service.carbon_re_service,
     kubernetes_manifest.carbon_re_gke_cert,
-    # kubernetes_manifest.backend_config
   ]
 }
 
@@ -258,8 +268,15 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
 #   depends_on = [kubernetes_service.carbon_re_internal_service]
 # }
 
+# 이미 생성된 글로벌 주소를 참조
 data "google_compute_global_address" "ingress_static_ip" {
   name   = "${var.project}-${var.env}-static-ip"
   # region = var.region
 }
+
+# 다음 리소스 생성 부분은 이미 존재하므로 주석 처리
+# resource "google_compute_global_address" "ingress_static_ip" {
+#   name   = "${var.project}-${var.env}-static-ip"
+#   # region = var.region
+# }
 

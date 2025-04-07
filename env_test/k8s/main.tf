@@ -139,25 +139,25 @@ resource "kubernetes_service_account" "cloud_sql_proxy" {
   depends_on = [ module.project_namespace ]
 }
 
-resource "kubernetes_deployment" "hello_gke" {
+resource "kubernetes_deployment" "carbon_re_webapp" {
   metadata {
-    name = "hello-gke"
+    name = "carbon-re-webapp"
     namespace = var.project
     labels = {
-      app = "hello-gke"
+      app = "carbon-re-webapp"
     }
   }
   spec {
     replicas = 2
     selector {
       match_labels = {
-        app = "hello-gke"
+        app = "carbon-re-webapp"
       }
     }
     template {
       metadata {
         labels = {
-          app = "hello-gke"
+          app = "carbon-re-webapp"
         }
       }
       spec {
@@ -165,8 +165,10 @@ resource "kubernetes_deployment" "hello_gke" {
           name = var.secret_name
         }
         container {
-          name  = "hello-gke"
-          image = "gcr.io/${var.project_id}/hello-gke-service:latest"
+          name  = "carbon-re-webapp"
+          # 실제 이미지가 없을 수 있으므로 테스트용 공개 이미지로 변경
+          image = "nginx:latest"  # 테스트용 nginx 이미지
+          # image = "gcr.io/${var.project_id}/carbon-re-webapp:latest"
 
 
           env {
@@ -202,7 +204,7 @@ resource "kubernetes_deployment" "hello_gke" {
           }
           env {
             name  = "DB_NAME"
-            value = "carbon-re-dev-db"
+            value = "carbon-re-test-db"
           }
 
           port {
@@ -253,7 +255,7 @@ resource "kubernetes_service" "carbon_re_service" {
   }
   spec {
     selector = {
-      app = "hello-gke"
+      app = "carbon-re-webapp"
     }
     type = "ClusterIP"
     port {
@@ -290,7 +292,9 @@ resource "kubernetes_deployment" "carbon-re-internal" {
         }
         container {
           name  = "internal-app"
-          image = "gcr.io/${var.project_id}/hello-gke-service-internal:latest"
+          # 실제 이미지가 없을 수 있으므로 테스트용 공개 이미지로 변경 
+          image = "nginx:latest"  # 테스트용 nginx 이미지
+          # image = "gcr.io/${var.project_id}/carbon-re-internal-service:latest"
           port {
             container_port = 8081
           }
@@ -322,132 +326,6 @@ resource "kubernetes_service" "carbon_re_internal_service" {
   }
 }
 
-
-resource "kubernetes_deployment" "scrap_api" {
-  metadata {
-    name = "scrap-api"
-    namespace = var.project
-    labels = {
-      app = "scrap-api"
-    }
-  }
-  spec {
-    replicas = 2
-    selector {
-      match_labels = {
-        app = "scrap-api"
-      }
-    }
-    template {
-      metadata {
-        labels = {
-          app = "scrap-api"
-        }
-      }
-      spec {
-        service_account_name = kubernetes_service_account.gcr_sa.metadata[0].name
-
-        image_pull_secrets {
-          name = "${var.region}-${var.secret_name}"
-        }
-        container {
-          name  = "scrap-api"
-          image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.project}-${var.env}-scrap-api/carbon-scrap-api:519c3167d2df5d98ecc426c03fb48cdd1b662c2a"
-          port {
-            container_port = 8000
-          }
-          env_from {
-            secret_ref {
-              name = "scrap-api"
-            }
-          }
-        }
-        # container {
-          # name  = "carbontrack-rabbitmq"
-          # image = "neogicarbonsaurus/customization:3.13-mgt-stream"
-        # }
-        container {
-          name  = "cloud-sql-proxy"
-          image = "gcr.io/cloudsql-docker/gce-proxy:1.33.2"
-          
-          command = [
-            "/cloud_sql_proxy",
-            "-ip_address_types=PRIVATE",
-            # "-instances=${var.project_id}:${var.region}:${data.google_sql_database_instance.carbontrack_db.name}=tcp:5432",
-            "-instances=${var.project_id}:${var.region}:${var.project}-${var.env}-db=tcp:5432",
-            "-credential_file=/secrets/cloudsql/credentials.json"
-          ]
-
-          security_context {
-            run_as_non_root = true
-          }
-
-          volume_mount {
-            name       = "cloud-sql-proxy-credentials"
-            mount_path = "/secrets/cloudsql"
-            read_only  = true
-          }
-        }
-        volume {
-          name = "cloud-sql-proxy-credentials"
-          secret {
-            secret_name = kubernetes_secret.cloud_sql_proxy.metadata[0].name
-          }
-        }
-        # service_account_name = kubernetes_service_account.cloud_sql_proxy.metadata[0].name
-      }
-    }
-  }
-}
-
-resource "kubernetes_manifest" "backend_config_scrap_api" {
-  manifest = {
-    apiVersion = "cloud.google.com/v1"
-    kind       = "BackendConfig"
-    metadata = {
-      name      = "scrap-api-backend-config"
-      namespace = var.project
-    }
-    spec = {
-       healthCheck = {
-        type             = "HTTP"
-        port            = 8000
-        requestPath     = "/scrap/health"
-        checkIntervalSec = 15
-        timeoutSec      = 5
-        healthyThreshold = 1
-        unhealthyThreshold = 2
-      }
-    }
-  }
-}
-
-resource "kubernetes_service" "scrap_api" {
-  metadata {
-    name = "scrap-api-service"
-    namespace = var.project
-    annotations = {
-      "cloud.google.com/neg" = "{\"ingress\": true}"
-      "cloud.google.com/backend-config" = jsonencode({
-        "ports" = {
-          "http" = "scrap-api-backend-config"
-        }
-      })
-    }
-  }
-  spec {
-    selector = {
-      app = "scrap-api"
-    }
-    type = "ClusterIP"
-    port {
-      name        = "http"
-      protocol    = "TCP"
-      port        = 80
-      target_port = 8000
-    }
-  }
-}
 
 # resource "kubernetes_deployment" "hello_gke" {
 #   metadata {

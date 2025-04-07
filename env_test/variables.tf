@@ -146,9 +146,14 @@ variable "dns_zone_name" {
 variable "dns_domain_name" {
   type = string
   default = "carbonsaurus.net."
-  
 }
 
+# test 환경 서브도메인
+variable "test_domain" {
+  description = "테스트 환경에서 사용할 서브도메인"
+  type        = string
+  default     = "test"
+}
 
 # 변수 정의 (variables.tf)
 variable "vm_configs" {
@@ -163,8 +168,8 @@ variable "vm_configs" {
     external_ip     = optional(bool, false) # 선택 사항, 기본값 false, 외부 IP 할당 여부
   }))
   default = {
-    bastion = {
-      instance_name   = "bastion"
+    bastion_test = {
+      instance_name   = "bastion-test"
       machine_type    = "e2-micro"
       zone            = "asia-northeast3-a" # 또는 local.zones[-1]
       boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -173,8 +178,8 @@ variable "vm_configs" {
       install_gcloud  = true
       external_ip     = true
     }
-    carbontrack_redis_dev = {
-      instance_name   = "carbontrack-redis-dev"
+    carbontrack_redis_test = {
+      instance_name   = "carbontrack-redis-test"
       machine_type    = "e2-small"
       zone            = "asia-northeast3-a"
       boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -182,8 +187,8 @@ variable "vm_configs" {
       boot_disk_type  = "pd-standard"
       install_gcloud  = false
     }
-    carbontrack_api_dev = {
-        instance_name = "carbontrack-api-dev"
+    carbontrack_api_test = {
+        instance_name = "carbontrack-api-test"
         machine_type  = "e2-small"
         zone          = "asia-northeast3-a"
         boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -191,8 +196,8 @@ variable "vm_configs" {
         boot_disk_type  = "pd-standard"
         install_gcloud  = false
     }
-    carbontrack_webapp_dev = {
-        instance_name = "carbontrack-webapp-dev"
+    carbontrack_webapp_test = {
+        instance_name = "carbontrack-webapp-test"
         machine_type  = "e2-micro"
         zone          = "asia-northeast3-a"
         boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -200,8 +205,8 @@ variable "vm_configs" {
         boot_disk_type  = "pd-standard"
         install_gcloud  = false
     }
-    carbontrack_admin_dev = {
-        instance_name = "carbontrack-admin-dev"
+    carbontrack_admin_test = {
+        instance_name = "carbontrack-admin-test"
         machine_type  = "e2-micro"
         zone          = "asia-northeast3-a"
         boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -209,8 +214,8 @@ variable "vm_configs" {
         boot_disk_type  = "pd-standard"
         install_gcloud  = false
     }
-    carbontrack_energy_usage_collecting_dev = {
-        instance_name = "carbontrack-energy-usage-collecting-dev"
+    carbontrack_energy_usage_collecting_test = {
+        instance_name = "carbontrack-energy-usage-collecting-test"
         machine_type  = "e2-micro"
         zone          = "asia-northeast3-c"
         boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"

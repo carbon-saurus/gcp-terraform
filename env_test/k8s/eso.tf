@@ -39,7 +39,7 @@ resource "google_secret_manager_secret" "project_gsm" {
 resource "google_secret_manager_secret_version" "project_gsm_version" {
   for_each = local.applications_map
   secret   = google_secret_manager_secret.project_gsm[each.key].id
-  secret_data = each.value
+  secret_data_wo = each.value
 }
 
 ################

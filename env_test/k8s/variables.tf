@@ -99,3 +99,8 @@ variable "dns_domain_name" {
   default = "carbonsaurus.net."
   
 }
+
+variable "sub_domain" {
+  type = string
+  default = "test"
+}

@@ -162,7 +162,7 @@ resource "kubernetes_deployment" "carbon_re_webapp" {
       }
       spec {
         image_pull_secrets {
-          name = var.secret_name
+          name = "${var.region}-${var.secret_name}"
         }
         container {
           name  = "carbon-re-webapp"
@@ -265,44 +265,44 @@ resource "kubernetes_service" "carbon_re_service" {
   }
 }
 
-resource "kubernetes_deployment" "carbon-re-internal" {
-  metadata {
-    name = "carbon-re-internal"
-    namespace = var.project
-    labels = {
-      app = "internal-service"
-    }
-  }
-  spec {
-    replicas = 1
-    selector {
-      match_labels = {
-        app = "internal-service"
-      }
-    }
-    template {
-      metadata {
-        labels = {
-          app = "internal-service"
-        }
-      }
-      spec {
-        image_pull_secrets {
-          name = var.secret_name
-        }
-        container {
-          name  = "internal-app"
-          # 실제 이미지가 없을 수 있으므로 테스트용 공개 이미지로 변경 
-          image = "nginx:latest"  # 테스트용 nginx 이미지
-          # image = "gcr.io/${var.project_id}/carbon-re-internal-service:latest"
-          port {
-            container_port = 8081
-          }
-        }
-      }
-    }
-  }
-}
+# resource "kubernetes_deployment" "carbon-re-internal" {
+#   metadata {
+#     name = "carbon-re-internal"
+#     namespace = var.project
+#     labels = {
+#       app = "internal-service"
+#     }
+#   }
+#   spec {
+#     replicas = 1
+#     selector {
+#       match_labels = {
+#         app = "internal-service"
+#       }
+#     }
+#     template {
+#       metadata {
+#         labels = {
+#           app = "internal-service"
+#         }
+#       }
+#       spec {
+#         image_pull_secrets {
+#           name = var.secret_name
+#         }
+#         container {
+#           name  = "internal-app"
+#           # 실제 이미지가 없을 수 있으므로 테스트용 공개 이미지로 변경 
+#           image = "nginx:latest"  # 테스트용 nginx 이미지
+#           # image = "gcr.io/${var.project_id}/carbon-re-internal-service:latest"
+#           port {
+#             container_port = 8081
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 
 resource "kubernetes_service" "carbon_re_internal_service" {
   metadata {

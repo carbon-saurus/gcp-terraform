@@ -47,11 +47,9 @@ resource "kubernetes_manifest" "carbon_re_gke_cert" {
     "spec" = {
       "domains" = [                         // 인증서를 발급받을 도메인 목록을 지정
         var.domain_name,                    // 메인 도메인
-        "scrap-api.${var.domain_name}",     // 서브 도메인
-        "track-api.${var.domain_name}",
-        "account-api.${var.domain_name}",
         "new-dev.${var.domain_name}",
         "new-dev-admin.${var.domain_name}",
+        "dev.${var.domain_name}",
       ]
     }
   }
@@ -116,11 +114,11 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     #   }
     # }
     rule {
-      host = var.domain_name
+      host = "${var.env}.${trimsuffix(var.dns_domain_name, ".")}"
       http {
         path {
-          path      = "/*"
-          path_type = "ImplementationSpecific"
+          path      = "/"
+          path_type = "Prefix"
           backend {
             service {
               name = "carbon-re-service"
@@ -130,13 +128,33 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
             }
           }
         }
-      }
-    }
-    rule {
-      host = "scrap-api.carbonsaurus.net"
-      http {
         path {
-          path = "/*"
+          path      = "/track/*"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "track-api-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+        path {
+          path      = "/account/*"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = "account-api-service"
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+        path {
+          path      = "/scrap/*"
+          path_type = "Prefix"
           backend {
             service {
               name = "scrap-api-service"
@@ -148,38 +166,22 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
         }
       }
     }
-    # rule {
-    #   host = "new-dev-api.carbontrack.app"
-    #   http {
-    #     path {
-    #       path = "/account/*"
-    #       backend {
-    #         service {
-    #           name = "carbontrack-account-api"
-    #           port {
-    #             number = 3000
-    #           }
-    #         }
-    #       }
-    #     }
-    #   }
-    # }
-    # rule {
-    #   host = "new-dev-api.carbontrack.app"
-    #   http {
-    #     path {
-    #       path = "/track/*"
-    #       backend {
-    #         service {
-    #           name = "carbontrack-track-api"
-    #           port {
-    #             number = 3000
-    #           }
-    #         }
-    #       }
-    #     }
-    #   }
-    # }
+    rule {
+      host = "new-dev.carbontrack.net"
+      http {
+        path {
+          path = "/*"
+          backend {
+            service {
+              name = "carbontrack-fe"
+              port {
+                number = 3000
+              }
+            }
+          }
+        }
+      }
+    }
     # rule {
     #   host = "new-admin-dev.carbontrack.app"
     #   http {

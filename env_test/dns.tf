@@ -40,6 +40,32 @@ resource "google_dns_record_set" "test_carbontrack_app_a_record" {
   ]
 }
 
+# test-api 서브도메인 A 레코드 생성
+resource "google_dns_record_set" "test_api" {
+  name         = "test-api.${var.dns_domain_name}"
+  type         = "A"
+  ttl          = 300
+  managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
+  rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
+  
+  depends_on = [
+    data.google_compute_global_address.ingress_static_ip
+  ]
+}
+
+# test-admin 서브도메인 A 레코드 생성
+resource "google_dns_record_set" "test_admin" {
+  name         = "test-admin.${var.dns_domain_name}"
+  type         = "A"
+  ttl          = 300
+  managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
+  rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
+  
+  depends_on = [
+    data.google_compute_global_address.ingress_static_ip
+  ]
+}
+
 # 새 URL 패턴으로 변경: test.carbonsaurus.net/track
 # 기존 독립 도메인 코드는 주석 처리
 # track-api 서브도메인 A 레코드
@@ -84,28 +110,28 @@ resource "google_dns_record_set" "test_carbontrack_app_a_record" {
 #   ]
 # }
 
-# new-dev 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "new_dev" {
-  name         = "new-dev.${var.dns_domain_name}"
-  type         = "A"
-  ttl          = 300
-  managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
-  rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
-  
-  depends_on = [
-    data.google_compute_global_address.ingress_static_ip
-  ]
-}
+# new-dev 서브도메인 A 레코드 생성 (더 이상 사용하지 않음)
+# resource "google_dns_record_set" "new_dev" {
+#   name         = "new-dev.${var.dns_domain_name}"
+#   type         = "A"
+#   ttl          = 300
+#   managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
+#   rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
+#   
+#   depends_on = [
+#     data.google_compute_global_address.ingress_static_ip
+#   ]
+# }
 
-# new-dev-admin 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "new_dev_admin" {
-  name         = "new-dev-admin.${var.dns_domain_name}"
-  type         = "A"
-  ttl          = 300
-  managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
-  rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
-  
-  depends_on = [
-    data.google_compute_global_address.ingress_static_ip
-  ]
-}
+# new-dev-admin 서브도메인 A 레코드 생성 (더 이상 사용하지 않음)
+# resource "google_dns_record_set" "new_dev_admin" {
+#   name         = "new-dev-admin.${var.dns_domain_name}"
+#   type         = "A"
+#   ttl          = 300
+#   managed_zone = data.google_dns_managed_zone.test_carbontrack_app_zone.name
+#   rrdatas      = [data.google_compute_global_address.ingress_static_ip.address]
+#   
+#   depends_on = [
+#     data.google_compute_global_address.ingress_static_ip
+#   ]
+# }

@@ -46,7 +46,10 @@ resource "kubernetes_manifest" "carbon_re_gke_cert" {
     }
     "spec" = {
       "domains" = [
-        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}"
+        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}",
+        "dev.${trimsuffix(var.dns_domain_name, ".")}",
+        "new-dev.${trimsuffix(var.dns_domain_name, ".")}",
+        "new-dev-admin.${trimsuffix(var.dns_domain_name, ".")}"
       ]
     }
   }
@@ -91,14 +94,9 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     namespace = var.project
     annotations = {
       "kubernetes.io/ingress.class"                     = "gce"
-      "kubernetes.io/ingress.allow-http"                = "true"  # HTTP 트래픽 허용 여부 (true/false)
       "networking.gke.io/managed-certificates"          = "carbon-re-gke-cert"
-      # "networking.gke.io/v1beta1.FrontendConfig"        = "carbon-re-fe-config"
       "kubernetes.io/ingress.global-static-ip-name"     = data.google_compute_global_address.ingress_static_ip.name
       "ingress.kubernetes.io/force-ssl-redirect"        = "true" # HTTP -> HTTPS 리디렉션
-      # "beta.cloud.google.com/backend-config"            = "{\"/api/*\": \"carbon-re-be-config\"}"
-      # "cloud.google.com/backend-config"                 = "{\"/api/*\": \"carbon-re-be-config\"}"
-      # "kubernetes.io/ingress.allow-google-ip"          = "true"
     }
   }
   spec {

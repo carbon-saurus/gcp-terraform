@@ -1,0 +1,10 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: carbon-gke-cert
+  namespace: carbon-re
+spec:
+  domains:
+    - test-api.carbonsaurus.net
+    - test.carbonsaurus.net
+    - test-admin.carbonsaurus.net 

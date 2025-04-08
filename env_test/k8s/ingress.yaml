@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: carbon-re-gke-ingress
+  namespace: carbon-re
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    networking.gke.io/managed-certificates: "carbon-gke-cert"
+    kubernetes.io/ingress.global-static-ip-name: "carbon-re-test-static-ip"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  rules:
+  - host: "test.carbonsaurus.net"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: carbontrack-fe
+            port:
+              number: 80
+  - host: "test-api.carbonsaurus.net"
+    http:
+      paths:
+      - path: "/track"
+        pathType: Prefix
+        backend:
+          service:
+            name: track-api-service
+            port:
+              number: 80
+      - path: "/account"
+        pathType: Prefix
+        backend:
+          service:
+            name: account-api-service
+            port:
+              number: 80
+      - path: "/scrap"
+        pathType: Prefix
+        backend:
+          service:
+            name: scrap-api-service
+            port:
+              number: 80
+  - host: "test-admin.carbonsaurus.net"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: carbontrack-fe
+            port:
+              number: 80 

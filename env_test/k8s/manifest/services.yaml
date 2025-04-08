@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: track-api-service
+  namespace: carbon-re
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"http":"track-api-backend-config"}}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: carbontrack-track-api-gcp
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-api-service
+  namespace: carbon-re
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"http":"account-api-backend-config"}}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: carbontrack-account-api-gcp
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrap-api-service
+  namespace: carbon-re
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"http":"scrap-api-backend-config"}}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8000
+  selector:
+    app: carbontrack-scrap-api
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carbontrack-fe
+  namespace: carbon-re
+  annotations:
+    cloud.google.com/backend-config: '{"ports":{"http":"carbontrack-fe-backend-config"}}'
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: carbontrack-fe
+  type: ClusterIP 

@@ -46,10 +46,10 @@ resource "kubernetes_manifest" "carbon_re_gke_cert" {
     }
     "spec" = {
       "domains" = [                         // 인증서를 발급받을 도메인 목록을 지정
-        var.domain_name,                    // 메인 도메인
-        "new-dev.${var.domain_name}",
-        "new-dev-admin.${var.domain_name}",
-        "dev.${var.domain_name}",
+        "carbonsaurus.net",                                // 메인 도메인 추가
+        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}",  // dev.carbonsaurus.net
+        "new-dev.${trimsuffix(var.dns_domain_name, ".")}",     // new-dev.carbonsaurus.net
+        "new-dev-admin.${trimsuffix(var.dns_domain_name, ".")}" // new-dev-admin.carbonsaurus.net
       ]
     }
   }
@@ -167,7 +167,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
       }
     }
     rule {
-      host = "new-dev.carbontrack.net"
+      host = "new-dev.${trimsuffix(var.dns_domain_name, ".")}"
       http {
         path {
           path = "/*"

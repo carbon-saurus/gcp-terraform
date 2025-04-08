@@ -43,9 +43,24 @@ resource "google_dns_record_set" "dev_carbontrack_app_a_record" {
   ]
 }
 
-# scrap-api 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "scrap_api" {
-  name         = "scrap-api.${var.dns_domain_name}"
+# 서브도메인 A 레코드 생성 (dev.carbonsaurus.net)
+resource "google_dns_record_set" "dev_env_record" {
+  project      = var.project_id
+  managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
+  name         = "${var.env}.${var.dns_domain_name}"
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [google_compute_global_address.ingress_static_ip.address]
+
+  depends_on = [
+    google_compute_global_address.ingress_static_ip,
+    google_dns_managed_zone.dev_carbontrack_app_zone
+  ]
+}
+
+# dev-api 서브도메인 A 레코드 생성
+resource "google_dns_record_set" "dev_api" {
+  name         = "dev-api.${var.dns_domain_name}"
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
@@ -57,9 +72,9 @@ resource "google_dns_record_set" "scrap_api" {
   ]
 }
 
-# track-api 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "track_api" {
-  name         = "track-api.${var.dns_domain_name}"
+# dev-admin 서브도메인 A 레코드 생성
+resource "google_dns_record_set" "dev_admin" {
+  name         = "dev-admin.${var.dns_domain_name}"
   type         = "A"
   ttl          = 300
   managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
@@ -71,44 +86,30 @@ resource "google_dns_record_set" "track_api" {
   ]
 }
 
-# account-api 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "account_api" {
-  name         = "account-api.${var.dns_domain_name}"
-  type         = "A"
-  ttl          = 300
-  managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
-  rrdatas      = [google_compute_global_address.ingress_static_ip.address]
-  
-  depends_on = [
-    google_compute_global_address.ingress_static_ip,
-    google_dns_managed_zone.dev_carbontrack_app_zone
-  ]
-}
+# # new-dev 서브도메인 A 레코드 생성 (더 이상 사용하지 않음)
+# resource "google_dns_record_set" "new_dev" {
+#   name         = "new-dev.${var.dns_domain_name}"
+#   type         = "A"
+#   ttl          = 300
+#   managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
+#   rrdatas      = [google_compute_global_address.ingress_static_ip.address]
+#   
+#   depends_on = [
+#     google_compute_global_address.ingress_static_ip,
+#     google_dns_managed_zone.dev_carbontrack_app_zone
+#   ]
+# }
 
-# new-dev 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "new_dev" {
-  name         = "new-dev.${var.dns_domain_name}"
-  type         = "A"
-  ttl          = 300
-  managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
-  rrdatas      = [google_compute_global_address.ingress_static_ip.address]
-  
-  depends_on = [
-    google_compute_global_address.ingress_static_ip,
-    google_dns_managed_zone.dev_carbontrack_app_zone
-  ]
-}
-
-# new-dev-admin 서브도메인 A 레코드 생성
-resource "google_dns_record_set" "new_dev_admin" {
-  name         = "new-dev-admin.${var.dns_domain_name}"
-  type         = "A"
-  ttl          = 300
-  managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
-  rrdatas      = [google_compute_global_address.ingress_static_ip.address]
-  
-  depends_on = [
-    google_compute_global_address.ingress_static_ip,
-    google_dns_managed_zone.dev_carbontrack_app_zone
-  ]
-}
+# # new-dev-admin 서브도메인 A 레코드 생성 (더 이상 사용하지 않음)
+# resource "google_dns_record_set" "new_dev_admin" {
+#   name         = "new-dev-admin.${var.dns_domain_name}"
+#   type         = "A"
+#   ttl          = 300
+#   managed_zone = google_dns_managed_zone.dev_carbontrack_app_zone.name
+#   rrdatas      = [google_compute_global_address.ingress_static_ip.address]
+#   
+#   depends_on = [
+#     google_compute_global_address.ingress_static_ip,
+#     google_dns_managed_zone.dev_carbontrack_app_zone
+#   ]
+# }

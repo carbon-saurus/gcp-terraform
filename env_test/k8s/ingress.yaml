@@ -51,6 +51,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: carbontrack-fe
+            name: carbontrack-admin-fe
             port:
               number: 80 

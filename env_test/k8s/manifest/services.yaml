@@ -13,7 +13,7 @@ spec:
     protocol: TCP
     targetPort: 8000
   selector:
-    app: carbontrack-track-api-gcp
+    app: carbontrack-track-test-api
   type: ClusterIP
 ---
 apiVersion: v1
@@ -31,7 +31,7 @@ spec:
     protocol: TCP
     targetPort: 8000
   selector:
-    app: carbontrack-account-api-gcp
+    app: carbontrack-account-test-api
   type: ClusterIP
 ---
 apiVersion: v1
@@ -49,7 +49,7 @@ spec:
     protocol: TCP
     targetPort: 8000
   selector:
-    app: carbontrack-scrap-api
+    app: carbontrack-scrap-test-api
   type: ClusterIP
 ---
 apiVersion: v1
@@ -67,5 +67,5 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: carbontrack-fe
+    app: carbontrack-fe-test
   type: ClusterIP 

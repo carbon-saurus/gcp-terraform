@@ -11,7 +11,7 @@ data "google_compute_global_address" "ingress_static_ip" {
 }
 
 # module "external_dns_gke" {
-#   source  = "terraform-iaac/external-dns/kubernetes"
+#   source  = "terraform-iaac/external-dns/kub마ernetes"
 #   version = "1.3.2"
 #   namespace = "kube-system"
 #   create_namespace = false

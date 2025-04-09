@@ -1,0 +1,74 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: track-api-backend-config
+  namespace: carbon-re
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    healthyThreshold: 1
+    port: 8000
+    requestPath: /track/health
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: account-api-backend-config
+  namespace: carbon-re
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    healthyThreshold: 1
+    port: 8000
+    requestPath: /account/health
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: scrap-api-backend-config
+  namespace: carbon-re
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    healthyThreshold: 1
+    port: 8000
+    requestPath: /scrap/health
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: carbontrack-fe-backend-config
+  namespace: carbon-re
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    healthyThreshold: 1
+    port: 3000
+    requestPath: /auth/sign-in
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2 
+---
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: carbontrack-admin-fe-backend-config
+  namespace: carbon-re
+spec:
+  healthCheck:
+    checkIntervalSec: 15
+    healthyThreshold: 1
+    port: 3000
+    requestPath: /login
+    timeoutSec: 5
+    type: HTTP
+    unhealthyThreshold: 2 

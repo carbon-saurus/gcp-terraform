@@ -1,0 +1,29 @@
+# carbontrack-rabbitmq-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  # 이 이름이 scrap-api에서 사용할 호스트 이름이 됩니다.
+  name: carbontrack-rabbitmq
+  namespace: carbon-re
+  labels:
+    # 서비스 자체를 식별하기 위한 레이블 (선택 사항이지만 좋은 습관)
+    app: carbontrack-rabbitmq
+spec:
+  selector:
+    # 이 레이블을 가진 Pod들을 찾아서 연결합니다.
+    # Deployment의 template.metadata.labels와 일치해야 합니다.
+    app: carbontrack-rabbitmq
+  ports:
+  - name: amqp # 포트를 식별하기 위한 이름
+    protocol: TCP
+    port: 5672        # 서비스가 클러스터 내에서 노출할 포트 (scrap-api는 이 포트로 연결)
+    targetPort: amqp  # Pod의 컨테이너 포트 이름 (Deployment에서 정의한 이름)
+                      # 또는 targetPort: 5672 처럼 포트 번호를 직접 지정해도 됩니다.
+  - name: http-mgmt # 관리 UI 포트
+    protocol: TCP
+    port: 15672       # 서비스가 노출할 관리 UI 포트
+    targetPort: http-mgmt # Pod의 컨테이너 포트 이름 (Deployment에서 정의한 이름)
+                      # 또는 targetPort: 15672
+  # ClusterIP가 기본값이지만 명시적으로 지정할 수도 있습니다.
+  # 클러스터 내부에서만 접근 가능하게 합니다.
+  type: ClusterIP 

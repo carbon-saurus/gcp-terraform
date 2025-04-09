@@ -1,0 +1,18 @@
+# carbontrack-redis-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: carbontrack-redis
+  namespace: carbon-re
+  labels:
+    app: carbontrack-redis
+spec:
+  selector:
+    # Redis Deployment의 template.metadata.labels와 일치해야 합니다.
+    app: carbontrack-redis
+  ports:
+  - name: redis-port 
+    protocol: TCP
+    port: 6379        
+    targetPort: redis-port 
+  type: ClusterIP 

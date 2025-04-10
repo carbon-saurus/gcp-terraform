@@ -85,5 +85,5 @@ spec:
     protocol: TCP
     targetPort: 3000
   selector:
-    app: carbontrack-admin-fe-prod
+    app: carbontrack-admin-prod
   type: ClusterIP 

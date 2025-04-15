@@ -22,7 +22,7 @@ terraform {
   }
 
   backend "gcs" {
-    bucket = "carbonsaurus-dev-devops-bucket"  
+    bucket = "carbonsaurus-prod-devops-bucket"  
     prefix = "terraform/prod/gcp/carbontrack_renewal.tfstate"
   }
 

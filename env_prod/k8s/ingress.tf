@@ -194,7 +194,6 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     }
   }
   depends_on = [
-    kubernetes_service.carbon_re_service,
     kubernetes_manifest.carbon_re_gke_cert,
   ]
 }

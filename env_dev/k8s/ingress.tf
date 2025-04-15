@@ -36,20 +36,19 @@ resource "google_project_service" "cert_manager_api" {
 }
 
 # Managed Certificate 생성
-resource "kubernetes_manifest" "carbon_re_gke_cert" {
+resource "kubernetes_manifest" "carbon_gke_cert" {
   manifest = {
     "apiVersion" = "networking.gke.io/v1"
     "kind"       = "ManagedCertificate"
     "metadata" = {
-      "name" = "carbon-re-gke-cert",
+      "name" = "carbon-gke-cert",
       "namespace" = var.project             // 네임스페이스 추가
     }
     "spec" = {
       "domains" = [                         // 인증서를 발급받을 도메인 목록을 지정
-        "carbonsaurus.net",                                // 메인 도메인 추가
-        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}",  // dev.carbonsaurus.net
-        "new-dev.${trimsuffix(var.dns_domain_name, ".")}",     // new-dev.carbonsaurus.net
-        "new-dev-admin.${trimsuffix(var.dns_domain_name, ".")}" // new-dev-admin.carbonsaurus.net
+        "${var.env}.${trimsuffix(var.dns_domain_name, ".")}",            // dev.carbonsaurus.net
+        "${var.env}-api.${trimsuffix(var.dns_domain_name, ".")}",        // dev-api.carbonsaurus.net
+        "${var.env}-admin.${trimsuffix(var.dns_domain_name, ".")}"       // dev-admin.carbonsaurus.net
       ]
     }
   }
@@ -95,7 +94,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     namespace = var.project
     annotations = {
       "kubernetes.io/ingress.class"                     = "gce"
-      "networking.gke.io/managed-certificates"          = "carbon-re-gke-cert"
+      "networking.gke.io/managed-certificates"          = "carbon-gke-cert"
       "kubernetes.io/ingress.global-static-ip-name"     = data.google_compute_global_address.ingress_static_ip.name
       "ingress.kubernetes.io/force-ssl-redirect"        = "true" # HTTP -> HTTPS 리디렉션
       # "ingress.cloud.google.com/backend-config"        = jsonencode({
@@ -104,15 +103,6 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
     }
   }
   spec {
-    # ingress_class_name = "gce"
-    # default_backend {
-    #   service {
-    #     name = "carbon-re-service"
-    #     port {
-    #       number = 80
-    #     }
-    #   }
-    # }
     rule {
       host = "${var.env}.${trimsuffix(var.dns_domain_name, ".")}"
       http {
@@ -121,15 +111,20 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           path_type = "Prefix"
           backend {
             service {
-              name = "carbon-re-service"
+              name = "carbontrack-fe"
               port {
                 number = 80
               }
             }
           }
         }
+      }
+    }
+    rule {
+      host = "${var.env}-api.${trimsuffix(var.dns_domain_name, ".")}"
+      http {
         path {
-          path      = "/track/*"
+          path      = "/track"
           path_type = "Prefix"
           backend {
             service {
@@ -141,7 +136,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           }
         }
         path {
-          path      = "/account/*"
+          path      = "/account"
           path_type = "Prefix"
           backend {
             service {
@@ -153,7 +148,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           }
         }
         path {
-          path      = "/scrap/*"
+          path      = "/scrap"
           path_type = "Prefix"
           backend {
             service {
@@ -167,41 +162,25 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
       }
     }
     rule {
-      host = "new-dev.${trimsuffix(var.dns_domain_name, ".")}"
+      host = "${var.env}-admin.${trimsuffix(var.dns_domain_name, ".")}"
       http {
         path {
-          path = "/*"
+          path      = "/"
+          path_type = "Prefix"
           backend {
             service {
               name = "carbontrack-fe"
               port {
-                number = 3000
+                number = 80
               }
             }
           }
         }
       }
     }
-    # rule {
-    #   host = "new-admin-dev.carbontrack.app"
-    #   http {
-    #     path {
-    #       path = "/*"
-    #       backend {
-    #         service {
-    #           name = "carbontrack-admin-fe-renewal"
-    #           port {
-    #             number = 3000
-    #           }
-    #         }
-    #       }
-    #     }
-    #   }
-    # }
   }
   depends_on = [
-    kubernetes_service.carbon_re_service,
-    kubernetes_manifest.carbon_re_gke_cert,
+    kubernetes_manifest.carbon_gke_cert,
     # kubernetes_manifest.backend_config
   ]
 }

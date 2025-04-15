@@ -83,7 +83,7 @@ variable "secret_name" {
 
 variable "email" {
   type = string
-  default = "gcr-sa@carbonsaurus-dev.iam.gserviceaccount.com"
+  default = "gcr-sa@carbonsaurus-prod.iam.gserviceaccount.com"
 }
 # variable "password" {
 #   type = string

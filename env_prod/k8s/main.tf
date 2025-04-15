@@ -1,8 +1,8 @@
 data "terraform_remote_state" "gcp" {
   backend = "gcs"
   config = {
-      bucket          = "carbonsaurus-dev-devops-bucket" 
-      prefix          = "terraform/dev/gcp/carbontrack_renewal.tfstate"
+      bucket          = "carbonsaurus-prod-devops-bucket" 
+      prefix          = "terraform/prod/gcp/carbontrack_renewal.tfstate"
   }
 }
 
@@ -36,7 +36,7 @@ data "terraform_remote_state" "gcp" {
 data "terraform_remote_state" "base_iam" {
   backend = "gcs" 
   config = {
-    bucket = "carbonsaurus-dev-devops-bucket"  
+    bucket = "carbonsaurus-prod-devops-bucket"  
     prefix = "terraform/common/gcp/carbontrack_renewal.tfstate"
   } 
 }

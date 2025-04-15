@@ -15,10 +15,7 @@ credentials_path = "../../credentials.json"
 applications = [
     "account-api",
     "carbontrack-fe",
-    "re100-fe",
     "admin-fe",
     "track-api",
-    "admin",
-    "notification-service",
     "scrap-api"
 ]

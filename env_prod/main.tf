@@ -3,8 +3,8 @@ data "terraform_remote_state" "devops" {
   backend = "gcs"
 
   config = {
-    bucket  = "carbonsaurus-dev-devops-bucket"   # devops 관련 상태 정보가 저장된 GCS 버킷 이름
-    prefix  = "terraform/dev/devops/terraform.tfstate"       # 상태 파일 경로(prefix)
+    bucket  = "carbonsaurus-prod-devops-bucket"   # devops 관련 상태 정보가 저장된 GCS 버킷 이름
+    prefix  = "terraform/prod/devops/terraform.tfstate"       # 상태 파일 경로(prefix)
   }
 }
 
@@ -64,7 +64,7 @@ locals {
 data "terraform_remote_state" "base_iam" {
   backend = "gcs" 
   config = {
-    bucket = "carbonsaurus-dev-devops-bucket"  
+    bucket = "carbonsaurus-prod-devops-bucket"  
     prefix = "terraform/common/gcp/carbontrack_renewal.tfstate"
   } 
 }

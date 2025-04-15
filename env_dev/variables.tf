@@ -163,8 +163,8 @@ variable "vm_configs" {
     external_ip     = optional(bool, false) # 선택 사항, 기본값 false, 외부 IP 할당 여부
   }))
   default = {
-    bastion = {
-      instance_name   = "bastion"
+    bastion_dev = {
+      instance_name   = "bastion-dev"
       machine_type    = "e2-micro"
       zone            = "asia-northeast3-a" # 또는 local.zones[-1]
       boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
@@ -172,51 +172,6 @@ variable "vm_configs" {
       boot_disk_type  = "pd-standard"
       install_gcloud  = true
       external_ip     = true
-    }
-    carbontrack_redis_dev = {
-      instance_name   = "carbontrack-redis-dev"
-      machine_type    = "e2-small"
-      zone            = "asia-northeast3-a"
-      boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-      boot_disk_size  = 30
-      boot_disk_type  = "pd-standard"
-      install_gcloud  = false
-    }
-    carbontrack_api_dev = {
-        instance_name = "carbontrack-api-dev"
-        machine_type  = "e2-small"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_webapp_dev = {
-        instance_name = "carbontrack-webapp-dev"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_admin_dev = {
-        instance_name = "carbontrack-admin-dev"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_energy_usage_collecting_dev = {
-        instance_name = "carbontrack-energy-usage-collecting-dev"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-c"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 10
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
     }
   }
 }

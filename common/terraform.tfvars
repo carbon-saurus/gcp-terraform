@@ -1,4 +1,4 @@
 project  = "carbon-re"
-project_id  = "carbonsaurus-dev"
+project_id  = "carbonsaurus-prod"
 region      = "asia-northeast3"
-credentials_path = "/home/youngbae_kwon/carbon_dev/credentials.json"
+credentials_path = "../credentials-prod.json"

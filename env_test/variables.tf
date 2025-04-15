@@ -178,50 +178,5 @@ variable "vm_configs" {
       install_gcloud  = true
       external_ip     = true
     }
-    carbontrack_redis_test = {
-      instance_name   = "carbontrack-redis-test"
-      machine_type    = "e2-small"
-      zone            = "asia-northeast3-a"
-      boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-      boot_disk_size  = 30
-      boot_disk_type  = "pd-standard"
-      install_gcloud  = false
-    }
-    carbontrack_api_test = {
-        instance_name = "carbontrack-api-test"
-        machine_type  = "e2-small"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_webapp_test = {
-        instance_name = "carbontrack-webapp-test"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_admin_test = {
-        instance_name = "carbontrack-admin-test"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-a"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 20
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
-    carbontrack_energy_usage_collecting_test = {
-        instance_name = "carbontrack-energy-usage-collecting-test"
-        machine_type  = "e2-micro"
-        zone          = "asia-northeast3-c"
-        boot_disk_image = "ubuntu-os-cloud/ubuntu-2005-lts"
-        boot_disk_size  = 10
-        boot_disk_type  = "pd-standard"
-        install_gcloud  = false
-    }
   }
 }

@@ -1,5 +1,5 @@
 project  = "carbon-re"
-project_id  = "carbonsaurus-dev"
+project_id  = "carbonsaurus-prod"
 owner       = "youngbae_kwon"
 env         = "prod"
 region      = "asia-northeast3"
@@ -10,13 +10,8 @@ db_name           = "track"
 db_user           = "postgresql"
 db_password       = "_0AA?>[*X80L*CKO<u{al|W]Ld>y"
 domain_name = "carbontrack.net"
-office_ip   = "165.225.229.31/32"
-# office_ip   = "58.123.54.42/32"
-credentials_path = "../credentials.json"
+office_ip   = "58.123.54.42/32"
+credentials_path = "../credentials-prod.json"
 
 
-applications = [
-    "webapp", 
-    "accounting-service",
-    "auth-service"
-]
+applications = []

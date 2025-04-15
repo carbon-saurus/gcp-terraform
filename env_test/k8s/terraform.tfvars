@@ -19,7 +19,4 @@ applications = [
     "track-api",
     "carbontrack-fe",
     "admin-fe",
-    "re100-fe",
-    "admin",
-    "notification-service"
 ]

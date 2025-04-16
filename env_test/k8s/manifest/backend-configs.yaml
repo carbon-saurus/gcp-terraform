@@ -34,6 +34,7 @@ metadata:
   name: scrap-api-backend-config
   namespace: carbon-re
 spec:
+  timeoutSec: 600
   healthCheck:
     checkIntervalSec: 15
     healthyThreshold: 1

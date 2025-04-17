@@ -108,24 +108,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           path_type = "Prefix"
           backend {
             service {
-              name = "carbon-re-service"
-              port {
-                number = 80
-              }
-            }
-          }
-        }
-      }
-    }
-    rule {
-      host = "${trimsuffix(var.dns_domain_name, ".")}"
-      http {
-        path {
-          path      = "/"
-          path_type = "Prefix"
-          backend {
-            service {
-              name = "carbon-re-service"
+              name = "carbontrack-fe"
               port {
                 number = 80
               }
@@ -138,7 +121,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
       host = "api.${trimsuffix(var.dns_domain_name, ".")}"
       http {
         path {
-          path      = "/track/*"
+          path      = "/track"
           path_type = "Prefix"
           backend {
             service {
@@ -150,7 +133,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           }
         }
         path {
-          path      = "/account/*"
+          path      = "/account"
           path_type = "Prefix"
           backend {
             service {
@@ -162,7 +145,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           }
         }
         path {
-          path      = "/scrap/*"
+          path      = "/scrap"
           path_type = "Prefix"
           backend {
             service {
@@ -183,7 +166,7 @@ resource "kubernetes_ingress_v1" "carbon_re_gke_ingress" {
           path_type = "Prefix"
           backend {
             service {
-              name = "carbon-re-service"
+              name = "carbontrack-admin-fe"
               port {
                 number = 80
               }

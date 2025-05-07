@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: re100-dev-gke-ingress
+  namespace: re100-dev
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    networking.gke.io/managed-certificates: "re100-dev-gke-cert"
+    kubernetes.io/ingress.global-static-ip-name: "re100-dev-static-ip"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  rules:
+  - host: "re100-dev.carbonsaurus.net"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: re100-eps-api-service
+            port:
+              number: 80

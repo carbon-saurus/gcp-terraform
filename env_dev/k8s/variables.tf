@@ -51,9 +51,6 @@ variable "applications" {
 #   description = "gcr password or ecr login password"
 #   type = string
 # }
-variable "admin_email" {
-  type = string
-}
 
 variable "ksa_name" {
   type = string

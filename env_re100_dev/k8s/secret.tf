@@ -18,7 +18,7 @@ resource "kubernetes_secret" "gcpsm_k8s_secret" {
   }
   type = "Opaque"
   data = {
-    "gcpsm-k8s-secret.json" = base64decode(data.terraform_remote_state.base_iam.outputs.external_es_key_private_key_data)
+    "gcpsm-k8s-secret.json" = file("external-secret-sa-key.json")
     # "gcpsm-k8s-secret.json" = base64decode(module.iam_config.external_es_key_private_key_data)
   }
   depends_on = [ module.project_namespace ]
@@ -37,7 +37,7 @@ module "dev_gcr_registry" {
   username    = var.username
   email       = var.email
   # password    = base64decode(module.iam_config.gcr_sa_key_private_key_data)
-  password    = base64decode(data.terraform_remote_state.base_iam.outputs.gcr_sa_key_private_key_data)
+  password    = file("gcr-sa-key.json")
 
   depends_on = [ module.project_namespace ]
 }
@@ -49,7 +49,7 @@ module "asia_gcr_registry" {
   gcr_server  = var.asia_gcr_server
   username    = var.username
   email       = var.email
-  password    = base64decode(data.terraform_remote_state.base_iam.outputs.gcr_sa_key_private_key_data)
+  password    = file("gcr-sa-key.json")
   # password    = base64decode(module.iam_config.gcr_sa_key_private_key_data)
 
   depends_on = [ module.project_namespace ]

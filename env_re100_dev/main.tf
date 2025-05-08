@@ -56,28 +56,32 @@ locals {
   db_disk_type      = "PD-HDD"
   # db_disk_type      = "PD-SSD"
   
-  
-
+  # 서비스 계정 이메일 형식: [NAME]@[PROJECT_ID].iam.gserviceaccount.com
+  gke_service_account = "gke-sa@${var.project_id}.iam.gserviceaccount.com"
+  gcr_service_account = "gcr-sa@${var.project_id}.iam.gserviceaccount.com"
+  cloud_sql_proxy_service_account = "cloud-sql-proxy-sa@${var.project_id}.iam.gserviceaccount.com"
+  external_secret_service_account = "external-secret-sa@${var.project_id}.iam.gserviceaccount.com"
 }
 
 # Common 리모트 상태 파일을 가져옵니다. 이 파일은 GCS 버킷에 저장된 Terraform 상태 파일입니다
-data "terraform_remote_state" "base_iam" {
-  backend = "gcs" 
-  config = {
-    bucket = "re100-dev-devops-bucket"  
-    prefix = "terraform/common/gcp/re100_dev.tfstate"
-  } 
-}
+# 현재는 상태 파일이 없으므로 주석 처리합니다.
+# data "terraform_remote_state" "base_iam" {
+#   backend = "gcs" 
+#   config = {
+#     bucket = "re100-dev-devops-bucket"  
+#     prefix = "terraform/common/gcp/re100_dev.tfstate"
+#   } 
+# }
 
 # IAM 서비스 계정 및 역할 생성
 module "iam" {
   source = "../modules/iam"
 
   project_id = var.project_id
-  gke_node_sa_email = data.terraform_remote_state.base_iam.outputs.gke_service_account
-  gcr_sa_email      = data.terraform_remote_state.base_iam.outputs.gcr_service_account
-  cloud_sql_proxy_sa_email =  data.terraform_remote_state.base_iam.outputs.cloud_sql_proxy_service_account
-  external_secret_sa_email = data.terraform_remote_state.base_iam.outputs.external_secret_service_account
+  gke_node_sa_email = local.gke_service_account
+  gcr_sa_email      = local.gcr_service_account
+  cloud_sql_proxy_sa_email = local.cloud_sql_proxy_service_account
+  external_secret_sa_email = local.external_secret_service_account
 
   # region     = data.google_client_config.current.region
 }
@@ -189,7 +193,7 @@ module "gke" {
   
   authorized_networks = ["0.0.0.0/0", module.network.private_subnet_cidr, module.network.public_subnet_cidr] # 허용된 네트워크 목록 (모든 IP, private 서브넷, public 서브넷)
 
-  gke_service_account = data.terraform_remote_state.base_iam.outputs.gke_service_account # GKE 서비스 계정
+  gke_service_account = local.gke_service_account # GKE 서비스 계정
   
   master_machine_type   = local.master_machine_type # 마스터 노드 머신 타입
   master_disk_size_gb   = local.master_disk_size_gb # 마스터 노드 디스크 크기 (GB)

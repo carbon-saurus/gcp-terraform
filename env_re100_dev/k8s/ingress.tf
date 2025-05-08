@@ -36,13 +36,13 @@ resource "google_project_service" "cert_manager_api" {
 }
 
 # Managed Certificate 생성
-resource "kubernetes_manifest" "carbon_re_gke_cert" {
+resource "kubernetes_manifest" "re100_dev_gke_cert" {
   manifest = {
     "apiVersion" = "networking.gke.io/v1"
     "kind"       = "ManagedCertificate"
     "metadata" = {
       "name" = "re100-dev-gke-cert",
-      "namespace" = var.project             // 네임스페이스 추가
+      "namespace" = var.project             
     }
     "spec" = {
       "domains" = [
@@ -178,13 +178,17 @@ resource "kubernetes_ingress_v1" "re100-dev-gke-ingress" {
     #   }
     # }
 #   }
-#   depends_on = [kubernetes_service.carbon_re_internal_service]
+#   depends_on = [kubernetes_service.re100_dev_internal_service]
 # }
 
 # Google Cloud에서 글로벌 정적 IP 주소를 생성
 resource "google_compute_global_address" "ingress_static_ip" {
   project = var.project_id
   name = "${var.project}-${var.env}-static-ip"
+  
+  lifecycle {
+    ignore_changes = [name]
+  }
 }
 
 # 이미 생성된 글로벌 정적 IP 주소를 참조 (주석 처리)

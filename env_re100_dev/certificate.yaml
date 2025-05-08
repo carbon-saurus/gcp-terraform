@@ -5,4 +5,4 @@ metadata:
   namespace: re100-dev
 spec:
   domains:
-  - re100.carbonsaurus.net
+  - re100-dev.carbonsaurus.net

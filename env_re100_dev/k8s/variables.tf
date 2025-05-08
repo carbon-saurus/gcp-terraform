@@ -8,13 +8,10 @@ variable "region" {
   type = string
 }
 
-# variable "cluster_name" {
-  # type = string
-# }
-
-# variable "zone" {
-  # type = string
-# }
+variable "zone" {
+  type = string
+  default = "asia-northeast3-a"
+}
 
 variable "db_user" {
   type = string
@@ -39,6 +36,32 @@ variable "owner" {
 variable "domain_name" {
   type = string
 }
+
+# 서비스 계정 변수 - 일관된 참조 제공
+variable "gke_service_account" {
+  description = "GKE 서비스 계정 이메일"
+  type        = string
+  default     = "gke-sa@re100-dev.iam.gserviceaccount.com"
+}
+
+variable "gcr_service_account" {
+  description = "GCR 서비스 계정 이메일"
+  type        = string
+  default     = "gcr-sa@re100-dev.iam.gserviceaccount.com"
+}
+
+variable "cloud_sql_proxy_service_account" {
+  description = "Cloud SQL Proxy 서비스 계정 이메일"
+  type        = string
+  default     = "cloud-sql-proxy-sa@re100-dev.iam.gserviceaccount.com"
+}
+
+variable "external_secret_service_account" {
+  description = "External Secret 서비스 계정 이메일"
+  type        = string
+  default     = "external-secret-sa@re100-dev.iam.gserviceaccount.com"
+}
+
 # variable "db_instance_name" {
   # type = string
 # }

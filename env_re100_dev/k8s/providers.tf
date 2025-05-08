@@ -21,8 +21,8 @@ terraform {
   }
 
   backend "gcs" {
-    bucket = "carbonsaurus-prod-devops-bucket"  # GCP에서 원격 상태 저장용 GCS 버킷 이름 (예: "my-gcp-terraform-state")
-    prefix = "terraform/prod/k8s/carbontrack-renewal.tfstate"
+    bucket = "re100-dev-devops-bucket"  # GCP에서 원격 상태 저장용 GCS 버킷 이름 (예: "my-gcp-terraform-state")
+    prefix = "terraform/dev/k8s/re100-dev.tfstate"
   }
 }
 

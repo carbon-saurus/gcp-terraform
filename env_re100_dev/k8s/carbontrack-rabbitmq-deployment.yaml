@@ -17,10 +17,9 @@ spec:
     spec:
       containers:
       - name: re100-dev-rabbitmq
-        # 사용할 커스텀 이미지로 변경
         image: carbonsaurus/re100-dev-rabbitmq:latest
         ports:
-        - containerPort:5672
+        - containerPort: 5672
           name: amqp
-        - containerPort:15672
-          name: http-mgmt 
+        - containerPort: 15672
+          name: http-mgmt

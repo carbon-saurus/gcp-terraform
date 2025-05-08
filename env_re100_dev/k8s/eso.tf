@@ -102,7 +102,7 @@ resource "kubernetes_service_account" "external_es" {
     name      = "external-secrets-sa"
     namespace = "external-secrets" 
     annotations = {
-      "iam.gke.io/gcp-service-account" = data.terraform_remote_state.base_iam.outputs.external_secret_service_account
+      "iam.gke.io/gcp-service-account" = var.external_secret_service_account
       # "iam.gke.io/gcp-service-account" = module.iam_config.external_es_service_account
     }
   }

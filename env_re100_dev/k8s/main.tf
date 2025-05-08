@@ -51,7 +51,7 @@ resource "kubernetes_service_account" "gcr_sa" {
     namespace = var.project
 
     annotations = {
-      "iam.gke.io/gcp-service-account" = "${data.terraform_remote_state.base_iam.outputs.gke_service_account}"
+      "iam.gke.io/gcp-service-account" = var.gke_service_account
       # "iam.gke.io/gcp-service-account" = "${module.iam_config.gcr_service_account}"
     }
   }
@@ -116,7 +116,7 @@ resource "kubernetes_secret" "cloud_sql_proxy" {
   }
 
   data = {
-    "credentials.json" = base64decode(data.terraform_remote_state.base_iam.outputs.cloud_sql_proxy_sa_key_private_key_data)
+    "credentials.json" = file("cloud-sql-proxy-sa-key.json")
   }
 
   depends_on = [ module.project_namespace ]
@@ -286,21 +286,10 @@ resource "kubernetes_service" "re100-eps-api-service" {
 #         }
 
 #         container {
-#           name  = "carbon-re-gke-internal-app" 
+#           name  = "re100-dev-gke-internal-app" 
 #           image =  "gcr.io/${var.project_id}/hello-gke-service-internal:latest" 
 #           port {
 #             container_port = 8081
-#             protocol = "TCP"
-#           }
-#           # 필요한 환경 변수, 볼륨 마운트 등 설정 추가
-#         }
-
-#         container {
-#           name  = "scrap-api" 
-#           image =  "${var.region}-docker.pkg.dev/${var.project_id}/${var.project}-${var.env}-scrap-api/carbon-scrap-api:519c3167d2df5d98ecc426c03fb48cdd1b662c2a" 
-#           # asia-northeast3-docker.pkg.dev/carbonsaurus-dev/carbon-re-dev-scrap-api/carbon-scrap-api
-#           port {
-#             container_port = 8082
 #             protocol = "TCP"
 #           }
 #           # 필요한 환경 변수, 볼륨 마운트 등 설정 추가
@@ -324,9 +313,9 @@ resource "kubernetes_service" "re100-eps-api-service" {
 #   ]
 # }
 # # 서비스 생성 (LoadBalancer 타입으로 변경)
-# resource "kubernetes_service" "carbon_re_service" {
+# resource "kubernetes_service" "re100-eps-api-service" {
 #   metadata {
-#     name = "carbon-re-service"
+#     name = "re100-eps-api-service"
 #     namespace = var.project
 #     annotations = {
 #       "cloud.google.com/neg" = "{\"ingress\": true}"  # 네트워크 엔드포인트 그룹 활성화
@@ -346,9 +335,9 @@ resource "kubernetes_service" "re100-eps-api-service" {
 #   }
 # }
 
-# resource "kubernetes_service" "carbon_re_gke_service_internal" {
+# resource "kubernetes_service" "re100-eps-api-service-internal" {
 #   metadata {
-#     name = "carbon-re-internal-service"
+#     name = "re100-eps-api-service-internal"
 #     namespace = var.project
 #     annotations = {
 #       "cloud.google.com/neg" = "{\"ingress\": true}" 
@@ -370,9 +359,9 @@ resource "kubernetes_service" "re100-eps-api-service" {
 #   }
 # }
 
-# resource "kubernetes_service" "carbon_re_dev_scrap_api" {
+# resource "kubernetes_service" "re100-eps-api-service-internal" {
 #   metadata {
-#     name = "carbon-re-dev-scrap-api"
+#     name = "re100-eps-api-service-internal"
 #     namespace = var.project
 #     annotations = {
 #       "cloud.google.com/neg" = "{\"ingress\": true}" 

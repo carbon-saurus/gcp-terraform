@@ -1,13 +1,13 @@
 resource "kubernetes_network_policy" "allow_smtp_outbound" {
   metadata {
     name      = "allow-smtp-outbound"
-    namespace = "carbon-re"
+    namespace = "re100-dev"
   }
 
   spec {
     pod_selector {
       match_labels = {
-        app = "carbontrack-account-api-gcp"
+        app = "re100-eps-api" 
       }
     }
 

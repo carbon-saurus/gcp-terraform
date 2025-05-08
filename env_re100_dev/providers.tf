@@ -22,7 +22,7 @@ terraform {
   }
 
   backend "gcs" {
-    bucket = "carbonsaurus-re100-dev-devops-bucket"  
+    bucket = "re100-dev-devops-bucket"  
     prefix = "terraform/dev/gcp/re100_dev.tfstate"
   }
 

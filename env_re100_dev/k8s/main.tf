@@ -181,7 +181,7 @@ resource "kubernetes_service" "re100-eps-api-service" {
   }
   spec {
     selector = {
-      app = "re100-eps-api"
+      app = "re100-dev-eps-api"
     }
     type = "ClusterIP"
     port {

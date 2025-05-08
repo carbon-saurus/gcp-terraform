@@ -1,4 +1,4 @@
-# carbontrack-redis-service.yaml
+# re100-dev-redis-service.yaml
 apiVersion: v1
 kind: Service
 metadata:

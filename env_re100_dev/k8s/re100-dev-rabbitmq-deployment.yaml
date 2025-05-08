@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
       - name: re100-dev-rabbitmq
-        image: carbonsaurus/re100-dev-rabbitmq:latest
+        image: rabbitmq:3.11-management
+        # 이전 이미지: carbonsaurus/re100-dev-rabbitmq:latest
         ports:
         - containerPort: 5672
           name: amqp

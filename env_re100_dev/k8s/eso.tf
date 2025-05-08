@@ -24,7 +24,7 @@ resource "helm_release" "external_secrets" {
 
 resource "google_secret_manager_secret" "project_gsm" {
   for_each = local.applications_map
-  secret_id = "${var.project}-${var.env}-${each.key}"
+  secret_id = "${var.project}-${each.key}"
   replication {
     user_managed {
       replicas {
@@ -67,7 +67,7 @@ resource "kubectl_manifest" "gcpsm_secret" {
     namespace = var.project
     interval  = "10s"
     # secret_id = each.value.secret_id
-    gsm_path = "${var.project}-${var.env}-${each.key}"
+    gsm_path = "${var.project}-${each.key}"
   })
   depends_on = [module.project_namespace, helm_release.external_secrets]
 }
@@ -78,7 +78,7 @@ resource "kubectl_manifest" "gcpsm_secret" {
 #     name      = each.key
 #     namespace = var.project
 #     interval  = "10s"
-#     gsm_path = "${var.project}-${var.env}-${each.key}"
+#     gsm_path = "${var.project}-${each.key}"
 #   })
 #   filename = "${path.module}/rendered-external-secret-${each.key}.yaml"
 # }

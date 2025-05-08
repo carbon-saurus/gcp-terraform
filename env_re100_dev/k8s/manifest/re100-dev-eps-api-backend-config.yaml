@@ -1,7 +1,7 @@
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: re100-eps-api-config
+  name: re100-dev-eps-api-backend-config
   namespace: re100-dev
 spec:
   healthCheck:

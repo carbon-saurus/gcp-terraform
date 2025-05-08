@@ -1,4 +1,4 @@
-project  = "re100"
+project  = "re100-dev"
 project_id  = "re100-dev"
 owner       = "tk.kim"
 env         = "dev"
@@ -11,5 +11,5 @@ gcr_server = "https://gcr.io"
 credentials_path = "../../credentials-re100-dev.json"
 
 applications = [
-    "re100-eps-api",
+    "re100-dev-eps-api",
 ]

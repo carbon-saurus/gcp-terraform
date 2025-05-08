@@ -17,6 +17,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: re100-eps-api-service
+            name: re100-dev-eps-api-service
             port:
               number: 80

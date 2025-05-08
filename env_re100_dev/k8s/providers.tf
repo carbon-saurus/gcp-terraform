@@ -37,7 +37,7 @@ data "google_client_config" "default" {}
 
 # GKE 클러스터 정보 가져오기
 data "google_container_cluster" "my_cluster" {
-  name     = "${var.project}-${var.env}-cluster"
+  name     = "re100-dev-cluster"
   # location = var.zone
   location = var.region
   project  = var.project_id

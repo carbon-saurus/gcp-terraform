@@ -7,7 +7,7 @@ resource "kubernetes_network_policy" "allow_smtp_outbound" {
   spec {
     pod_selector {
       match_labels = {
-        app = "re100-eps-api" 
+        app = "re100-dev-eps-api"
       }
     }
 

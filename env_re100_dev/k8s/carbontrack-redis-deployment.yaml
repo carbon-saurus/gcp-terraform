@@ -1,0 +1,45 @@
+# redis-secret.yaml (선택 사항, 권장)
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: redis-secret
+#  namespace: re100-dev
+#type: Opaque
+#data:
+  # 'your-strong-password'를 원하는 비밀번호로 변경 후 base64 인코딩
+  # 예: echo -n 'your-strong-password' | base64
+  #  REDIS_PASSWORD: eW91ci1zdHJvbmctcGFzc3dvcmQ= # 예시: 'your-strong-password' 인코딩 값
+  #---
+# redis-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: re100-dev-redis-deployment
+  namespace: re100-dev
+  labels:
+    app: re100-dev-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: re100-dev-redis
+  template:
+    metadata:
+      labels:
+        app: re100-dev-redis
+    spec:
+      containers:
+      - name: re100-dev-redis
+        image: redis:7-alpine # 사용할 Redis 이미지
+        ports:
+        - containerPort: 6379 # Redis 기본 포트
+          name: redis-port
+        # Secret에 저장된 비밀번호를 사용하여 Redis 실행 (권장 방식)
+        #command: ["redis-server"]
+        #args: ["--requirepass", "$(REDIS_PASSWORD)"]
+        #env:
+        #- name: REDIS_PASSWORD
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: re100-dev-redis-secret # 위에서 정의한 Secret 이름
+        #      key: REDIS_PASSWORD #

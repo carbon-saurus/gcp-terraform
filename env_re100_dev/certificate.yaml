@@ -1,0 +1,8 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: re100-dev-gke-cert
+  namespace: re100-dev
+spec:
+  domains:
+  - re100-dev.carbonsaurus.net

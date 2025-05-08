@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: re100-dev-rabbitmq-deployment
+  namespace: re100-dev
+  labels:
+    app: re100-dev-rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: re100-dev-rabbitmq
+  template:
+    metadata:
+      labels:
+        app: re100-dev-rabbitmq
+    spec:
+      containers:
+      - name: re100-dev-rabbitmq
+        image: carbonsaurus/re100-dev-rabbitmq:latest
+        ports:
+        - containerPort: 5672
+          name: amqp
+        - containerPort: 15672
+          name: http-mgmt

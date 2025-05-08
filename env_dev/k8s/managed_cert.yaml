@@ -1,8 +1,0 @@
-apiVersion: networking.gke.io/v1
-kind: ManagedCertificate
-metadata:
-  name: hello-gke-cert
-  namespace: carbon-re
-spec:
-  domains:
-    - carbonsaurus.net

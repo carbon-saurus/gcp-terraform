@@ -72,17 +72,6 @@ resource "kubectl_manifest" "gcpsm_secret" {
   depends_on = [module.project_namespace, helm_release.external_secrets]
 }
 
-resource "kubectl_manifest" "gcpsm_db_secret" {
-  yaml_body = templatefile("${path.module}/manifest/external-secret.yaml", {
-    name      = "db-credentials"
-    namespace = var.project
-    interval  = "10s"
-    # secret_id = each.value.secret_id
-    gsm_path = "db-password"
-  })
-  depends_on = [module.project_namespace, helm_release.external_secrets]
-}
-
 # resource "local_file" "rendered_yaml" {
 #   for_each = google_secret_manager_secret.project_gsm
 #   content  = templatefile("${path.module}/manifest/external-secret.yaml", {

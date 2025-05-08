@@ -2,7 +2,6 @@
 apiVersion: v1
 kind: Service
 metadata:
-  # 이 이름이 scrap-api에서 사용할 호스트 이름이 됩니다.
   name: carbontrack-rabbitmq
   namespace: carbon-re
   labels:
